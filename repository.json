@@ -1,0 +1,8 @@
+{
+  "name": "Waldi Custom Add-ons",
+  "url": "https://github.com/Waldzio/ha-addons",
+  "maintainer": "Waldi",
+  "addons": [
+    "lan_to_wan_relationss"
+  ]
+}
