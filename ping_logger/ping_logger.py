@@ -98,7 +98,7 @@ def main():
             try:
                 resp = ping(ip, count=1, timeout=1)
                 if resp.success():
-                    rtt = round(resp.rtt_avg_ms, 2)
+                    rtt = int(round(resp.rtt_avg_ms))
                 else:
                     rtt = "timeout"
             except Exception as e:
@@ -107,7 +107,6 @@ def main():
 
             log_ping(ip, rtt)
 
-            # Wysyłaj na MQTT tylko jeśli inny od poprzedniego!
             if last_states.get(ip) != rtt:
                 topic_state = f"{DISCOVERY_PREFIX}/sensor/ping_{ip.replace('.', '_')}/state"
                 print(f"[STATE] Zmieniono ping, publikuję na {topic_state}: {rtt}")
