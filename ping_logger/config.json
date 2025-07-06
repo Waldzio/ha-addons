@@ -1,6 +1,6 @@
 {
   "name": "Ping Logger",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "slug": "ping_logger",
   "description": "Addon: Loguje ping wybranych adresów IP oraz publikuje sensory przez MQTT.",
   "startup": "application",
@@ -14,8 +14,7 @@
     "mqtt_port": 1883,
     "mqtt_user": "",
     "mqtt_pass": "",
-    "size": 56,
-    "ttl": 64
+    "size": 56
   },
   "schema": {
     "targets": ["str"],
@@ -25,8 +24,7 @@
     "mqtt_port": "int",
     "mqtt_user": "str",
     "mqtt_pass": "str",
-    "size": "int",
-    "ttl": "int"
+    "size": "int"
   },
   "panel": false,
   "ingress": false,
