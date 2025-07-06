@@ -1,6 +1,6 @@
 {
   "name": "LAN to WAN Relationss",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "slug": "lan_to_wan_relationss",
   "description": "Addon: Monitors selected IP addresses by ping and publishes sensor data via MQTT to Home Assistant. One sensor per address. Only updates sensor when the ping changes (rounded to full ms). Requires MQTT credentials (use your Home Assistant user and password).",
   "startup": "application",
