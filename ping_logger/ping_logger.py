@@ -28,7 +28,6 @@ MQTT_USER = conf.get("mqtt_user", "")
 MQTT_PASS = conf.get("mqtt_pass", "")
 
 SIZE = int(conf.get("size", 56))
-TTL = int(conf.get("ttl", 64))
 
 DISCOVERY_PREFIX = 'homeassistant'
 DEVICE_NAME = 'ping_logger'
@@ -99,7 +98,7 @@ def main():
         for ip in TARGETS:
             print(f"Pinguje {ip} ...")
             try:
-                resp = ping(ip, count=1, timeout=1, size=SIZE, ttl=TTL)
+                resp = ping(ip, count=1, timeout=1, size=SIZE)
                 if resp.success():
                     rtt = int(round(resp.rtt_avg_ms))
                 else:
