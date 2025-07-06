@@ -1,8 +1,14 @@
 {
-  "name": "Waldi Custom Add-ons",
+  "name": "Waldi's Home Assistant Addons",
   "url": "https://github.com/Waldzio/ha-addons",
   "maintainer": "Waldi",
   "addons": [
-    "lan_to_wan_relationss"
+    {
+      "name": "Ping Logger",
+      "slug": "ping_logger",
+      "description": "Pinguje adresy IP i loguje odpowiedzi do CSV.",
+      "url": "https://github.com/Waldzio/ha-addons/tree/main/ping_logger",
+      "version": "0.1.0"
+    }
   ]
 }

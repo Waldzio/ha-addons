@@ -1,0 +1,23 @@
+{
+  "name": "Ping Logger",
+  "version": "0.1.0",
+  "slug": "ping_logger",
+  "description": "Addon: Loguje ping wybranych adresów IP. Wszystko przez GUI.",
+  "startup": "application",
+  "boot": "auto",
+  "host_network": true,
+  "options": {
+    "targets": ["8.8.8.8"],
+    "interval": 1,
+    "keep_days": 2
+  },
+  "schema": {
+    "targets": ["str"],
+    "interval": "int",
+    "keep_days": "int"
+  },
+  "panel": false,
+  "ingress": false,
+  "arch": ["amd64", "aarch64", "armv7", "armhf"],
+  "image": "local/ping_logger"
+}
