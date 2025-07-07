@@ -1,4 +1,4 @@
-FROM ghcr.io/home-assistant/amd64-addon-base:14.1.1
+FROM ghcr.io/home-assistant/amd64-addon-base:latest
 
 RUN apk add --no-cache python3 py3-pip bash
 RUN pip3 install pythonping paho-mqtt
