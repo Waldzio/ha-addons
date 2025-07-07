@@ -1,12 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/bin/with-contenv bashio
 
-# Jeśli Supervisor (bashio) jest dostępny, pobierz poświadczenia:
-if command -v bashio &> /dev/null; then
-  export SUPERVISOR_MQTT_USERNAME=$(bashio::services mqtt "username")
-  export SUPERVISOR_MQTT_PASSWORD=$(bashio::services mqtt "password")
-  export SUPERVISOR_MQTT_HOST=$(bashio::services mqtt "host")
-  export SUPERVISOR_MQTT_PORT=$(bashio::services mqtt "port")
-fi
+# Teraz Bashio jest dostępne w oficjalnych obrazach
+MQTT_HOST=$(bashio::services mqtt "host")
+MQTT_PORT=$(bashio::services mqtt "port")
+MQTT_USER=$(bashio::services mqtt "username")
+MQTT_PASS=$(bashio::services mqtt "password")
 
-# Uruchom PingLogger
+export MQTT_HOST MQTT_PORT MQTT_USER MQTT_PASS
+
 python3 /ping_logger.py
