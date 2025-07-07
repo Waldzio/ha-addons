@@ -1,8 +1,8 @@
 {
   "name": "Ping Logger",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "slug": "ping_logger",
-  "description": "Loguje ping i publikuje sensory do Home Assistant przez MQTT",
+  "description": "Loguje ping i publikuje sensory do Home Assistant przez MQTT (auto-login Supervisor)",
   "startup": "application",
   "boot": "auto",
   "host_network": true,
@@ -11,21 +11,13 @@
     "targets": ["8.8.8.8", "1.1.1.1"],
     "interval": 60,
     "keep_days": 2,
-    "size": 56,
-    "mqtt_host": "localhost",
-    "mqtt_port": 1883,
-    "mqtt_user": "",
-    "mqtt_pass": ""
+    "size": 56
   },
   "schema": {
     "targets": ["str"],
     "interval": "int",
     "keep_days": "int",
-    "size": "int",
-    "mqtt_host": "str",
-    "mqtt_port": "int",
-    "mqtt_user": "str",
-    "mqtt_pass": "str"
+    "size": "int"
   },
   "services": ["mqtt:need"],
   "build": true
