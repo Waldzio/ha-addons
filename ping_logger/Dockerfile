@@ -1,18 +1,21 @@
-# Użyj oficjalnego HA base image, który zawiera Bashio:
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-addon-base:stable
-FROM ${BUILD_FROM}
+FROM python:3.11-alpine
 
-# Zainstaluj Python i pip
-RUN apk add --no-cache python3 py3-pip
+# Zainstaluj Python, pip, klienta MQTT i bash
+RUN apk add --no-cache \
+      python3 \
+      py3-pip \
+      py3-paho-mqtt \
+      bash
 
-# Zainstaluj zależności Pythona
-RUN pip3 install pythonping paho-mqtt
+# Zainstaluj tylko pythonping z pip (lekki, czysty)
+RUN pip3 install --no-cache-dir pythonping
 
-# Skopiuj skrypty
+# Skopiuj skrypty do kontenera
 COPY ping_logger.py /ping_logger.py
-COPY run.sh /run.sh
+COPY run.sh        /run.sh
 
-# Nadaj prawa wykonywalności
+# Nadaj prawa wykonywalności dla run.sh
 RUN chmod +x /run.sh
 
-CMD [ "/run.sh" ]
+# Uruchom skrypt startowy
+CMD ["/run.sh"]
