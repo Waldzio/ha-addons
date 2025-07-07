@@ -1,6 +1,6 @@
 {
   "name": "Ping Logger",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "slug": "ping_logger",
   "description": "Pinguj adresy IP i publikuj sensory do Home Assistant przez MQTT",
   "startup": "application",
