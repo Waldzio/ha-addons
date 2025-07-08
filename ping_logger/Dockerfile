@@ -1,25 +1,25 @@
 FROM python:3.11-alpine
 
-# Dodaj repozytorium community, by mieć dostęp do py3-paho-mqtt
+# 1️⃣ Dodanie repozytorium community (potrzebne dla py3-paho-mqtt)
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" \
       >> /etc/apk/repositories
 
-# Zainstaluj Python, pip, klienta MQTT i bash
+# 2️⃣ Instalacja: Python, pip, bash i py3-paho-mqtt
 RUN apk add --no-cache \
       python3 \
       py3-pip \
       py3-paho-mqtt \
       bash
 
-# Zainstaluj tylko pythonping przez pip
+# 3️⃣ Instalacja tylko pythonping przez pip (czysty kod Python)
 RUN pip3 install --no-cache-dir pythonping
 
-# Skopiuj skrypty do kontenera
+# 4️⃣ Kopiowanie skryptów
 COPY ping_logger.py /ping_logger.py
 COPY run.sh        /run.sh
 
-# Nadaj prawa wykonywalności dla run.sh
+# 5️⃣ Dodanie wykonywalnych praw do run.sh
 RUN chmod +x /run.sh
 
-# Uruchom run.sh
+# 6️⃣ Komenda startowa
 CMD ["/run.sh"]
