@@ -1,25 +1,26 @@
 import os
 import time
 import json
+import csv
 from datetime import datetime, timedelta
 from pythonping import ping
 import paho.mqtt.client as mqtt
 
 CONFIG_PATH = "/data/options.json"
-LOG_FILE = "/data/ping_log.json"
+LOG_PATH    = "/data/ping_log.json"
 
 def load_config():
     with open(CONFIG_PATH) as f:
         return json.load(f)
 
 def load_log():
-    if os.path.exists(LOG_FILE):
-        with open(LOG_FILE) as f:
+    if os.path.exists(LOG_PATH):
+        with open(LOG_PATH) as f:
             return json.load(f)
     return {}
 
 def save_log(log):
-    with open(LOG_FILE, "w") as f:
+    with open(LOG_PATH, "w") as f:
         json.dump(log, f)
 
 def cleanup_log(log, days):
@@ -38,7 +39,6 @@ def main():
     keep_days = int(cfg.get("keep_days", 2))
     size      = int(cfg.get("size", 56))
 
-    # Pobranie poświadczeń MQTT (env lub z configu)
     host = os.getenv("MQTT_HOST", cfg.get("mqtt_host", "localhost"))
     port = int(os.getenv("MQTT_PORT", cfg.get("mqtt_port", 1883)))
     user = os.getenv("MQTT_USER", cfg.get("mqtt_user", ""))
@@ -66,7 +66,6 @@ def main():
             log = cleanup_log(log, keep_days)
 
             if last.get(ip) == rtt:
-                # bez zmian, pomiń publish
                 continue
             last[ip] = rtt
 
