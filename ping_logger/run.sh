@@ -1,12 +1,10 @@
-#!/usr/bin/env bash
+#!/usr/bin/with-contenv bashio
 
-# Jeśli bashio jest dostępne (Supervisor Add-on), pobierz poświadczenia MQTT
-if command -v bashio &> /dev/null; then
-  export MQTT_HOST=$(bashio::services mqtt "host")
-  export MQTT_PORT=$(bashio::services mqtt "port")
-  export MQTT_USER=$(bashio::services mqtt "username")
-  export MQTT_PASS=$(bashio::services mqtt "password")
-fi
+MQTT_HOST=$(bashio::services mqtt "host")
+MQTT_PORT=$(bashio::services mqtt "port")
+MQTT_USER=$(bashio::services mqtt "username")
+MQTT_PASS=$(bashio::services mqtt "password")
 
-# Uruchom główny skrypt
+export MQTT_HOST MQTT_PORT MQTT_USER MQTT_PASS
+
 python3 /ping_logger.py
