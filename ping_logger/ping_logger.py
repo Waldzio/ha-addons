@@ -1,36 +1,29 @@
-import os
-import time
-import json
-import csv
+import os, time, json
 from datetime import datetime, timedelta
 from pythonping import ping
 import paho.mqtt.client as mqtt
 
-CONFIG_PATH = "/data/options.json"
-LOG_PATH    = "/data/ping_log.json"
+CONFIG = "/data/options.json"
+LOGFILE = "/data/ping_log.json"
 
 def load_config():
-    with open(CONFIG_PATH) as f:
-        return json.load(f)
+    with open(CONFIG) as f: return json.load(f)
 
 def load_log():
-    if os.path.exists(LOG_PATH):
-        with open(LOG_PATH) as f:
-            return json.load(f)
+    if os.path.exists(LOGFILE):
+        with open(LOGFILE) as f: return json.load(f)
     return {}
 
 def save_log(log):
-    with open(LOG_PATH, "w") as f:
-        json.dump(log, f)
+    with open(LOGFILE, "w") as f: json.dump(log, f)
 
-def cleanup_log(log, days):
+def cleanup(log, days):
     cutoff = datetime.now() - timedelta(days=days)
-    for ip, entries in log.items():
-        log[ip] = [e for e in entries if datetime.fromisoformat(e["time"]) > cutoff]
+    for ip, arr in log.items():
+        log[ip] = [e for e in arr if datetime.fromisoformat(e["time"]) > cutoff]
     return log
 
-def sanitize(ip):
-    return ip.replace(".", "_")
+def sanitize(ip): return ip.replace(".", "_")
 
 def main():
     cfg = load_config()
@@ -45,8 +38,7 @@ def main():
     pwd  = os.getenv("MQTT_PASS", cfg.get("mqtt_pass", ""))
 
     client = mqtt.Client()
-    if user:
-        client.username_pw_set(user, pwd)
+    if user: client.username_pw_set(user, pwd)
     client.connect(host, port)
     client.loop_start()
 
@@ -57,13 +49,13 @@ def main():
         now = datetime.now().isoformat()
         for ip in targets:
             try:
-                resp = ping(ip, count=1, size=size, timeout=1)
-                rtt = int(round(resp.rtt_avg_ms)) if resp.success() else None
-            except Exception:
+                res = ping(ip, count=1, size=size, timeout=1)
+                rtt = int(round(res.rtt_avg_ms)) if res.success() else None
+            except:
                 rtt = None
 
             log.setdefault(ip, []).append({"time": now, "latency": rtt})
-            log = cleanup_log(log, keep_days)
+            log = cleanup(log, keep_days)
 
             if last.get(ip) == rtt:
                 continue
