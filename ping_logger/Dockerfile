@@ -1,14 +1,12 @@
 FROM python:3.11-slim
 
-# Zainstaluj pakiety systemowe
-RUN apt-get update && apt-get install -y \
-      bash \
+# Zainstaluj bash
+RUN apt-get update && apt-get install -y bash \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalacja niezbędnych bibliotek Python
+# Zainstaluj pakiety Python
 RUN pip3 install --no-cache-dir pythonping paho-mqtt
 
-# Skopiuj skrypty
 COPY ping_logger.py /ping_logger.py
 COPY run.sh        /run.sh
 
