@@ -11,26 +11,24 @@ def load_config():
 
 def load_log():
     if os.path.exists(LOGFILE):
-        with open(LOGFILE) as f: return json.load(f)
+        return json.load(open(LOGFILE))
     return {}
 
 def save_log(log):
-    with open(LOGFILE, "w") as f: json.dump(log, f)
+    json.dump(log, open(LOGFILE, "w"))
 
 def cleanup(log, days):
     cutoff = datetime.now() - timedelta(days=days)
-    for ip, arr in log.items():
-        log[ip] = [e for e in arr if datetime.fromisoformat(e["time"]) > cutoff]
+    for ip in list(log):
+        log[ip] = [e for e in log[ip] if datetime.fromisoformat(e["time"]) > cutoff]
     return log
 
 def sanitize(ip): return ip.replace(".", "_")
 
 def main():
     cfg = load_config()
-    targets   = cfg.get("targets", [])
-    interval  = int(cfg.get("interval", 60))
-    keep_days = int(cfg.get("keep_days", 2))
-    size      = int(cfg.get("size", 56))
+    targets = cfg["targets"]
+    interval, keep, size = map(int, (cfg["interval"], cfg["keep_days"], cfg["size"]))
 
     host = os.getenv("MQTT_HOST", cfg.get("mqtt_host", "localhost"))
     port = int(os.getenv("MQTT_PORT", cfg.get("mqtt_port", 1883)))
@@ -55,30 +53,21 @@ def main():
                 rtt = None
 
             log.setdefault(ip, []).append({"time": now, "latency": rtt})
-            log = cleanup(log, keep_days)
+            log = cleanup(log, keep)
 
-            if last.get(ip) == rtt:
-                continue
-            last[ip] = rtt
-
-            topic_state = f"homeassistant/sensor/ping_{sanitize(ip)}/state"
-            client.publish(topic_state, rtt if rtt is not None else "timeout", retain=True)
-
-            topic_cfg = f"homeassistant/sensor/ping_{sanitize(ip)}/config"
-            payload = {
-                "name": f"Ping {ip}",
-                "state_topic": topic_state,
-                "unit_of_measurement": "ms",
-                "unique_id": f"ping_{sanitize(ip)}",
-                "device_class": "measurement",
-                "device": {
-                    "identifiers": ["ping_logger"],
-                    "name": "PingLogger",
-                    "manufacturer": "Waldi"
+            if last.get(ip) != rtt:
+                last[ip] = rtt
+                topic = f"homeassistant/sensor/ping_{sanitize(ip)}"
+                client.publish(f"{topic}/state", rtt or "timeout", retain=True)
+                cfgt = {
+                    "name": f"Ping {ip}",
+                    "state_topic": f"{topic}/state",
+                    "unit_of_measurement": "ms",
+                    "unique_id": f"ping_{sanitize(ip)}",
+                    "device_class": "measurement",
+                    "device": {"identifiers":["ping_logger"],"name":"PingLogger","manufacturer":"Waldi"}
                 }
-            }
-            client.publish(topic_cfg, json.dumps(payload), retain=True)
-
+                client.publish(f"{topic}/config", json.dumps(cfgt), retain=True)
         save_log(log)
         time.sleep(interval)
 
