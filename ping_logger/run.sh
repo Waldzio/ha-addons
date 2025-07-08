@@ -1,10 +1,11 @@
-#!/usr/bin/with-contenv bashio
+#!/usr/bin/env bash
 
-MQTT_HOST=$(bashio::services mqtt "host")
-MQTT_PORT=$(bashio::services mqtt "port")
-MQTT_USER=$(bashio::services mqtt "username")
-MQTT_PASS=$(bashio::services mqtt "password")
-
-export MQTT_HOST MQTT_PORT MQTT_USER MQTT_PASS
+# Jeśli działamy jako Home Assistant Add-on, to pobieramy poświadczenia
+if command -v bashio &> /dev/null; then
+  export MQTT_HOST=$(bashio::services mqtt "host")
+  export MQTT_PORT=$(bashio::services mqtt "port")
+  export MQTT_USER=$(bashio::services mqtt "username")
+  export MQTT_PASS=$(bashio::services mqtt "password")
+fi
 
 python3 /ping_logger.py
