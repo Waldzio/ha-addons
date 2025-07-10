@@ -1,17 +1,13 @@
-ARG BUILD_FROM
-FROM $BUILD_FROM
+FROM ghcr.io/home-assistant/${BUILD_ARCH}-base:latest
 
-ARG BUILD_ARCH
-ENV LANG C.UTF-8
-
-# Dodaj klienta MQTT w Alpine
+# Zainstaluj Python i MQTT (Alpine)
 RUN apk add --no-cache python3 py3-pip py3-paho-mqtt
 
-# Zainstaluj pythonping
-RUN pip3 install --no-cache-dir pythonping
+# Pozwól pipowi nadpisać systemowe pakiety
+RUN pip install --break-system-packages pythonping
 
-COPY run.sh /run.sh
 COPY ping_logger.py /ping_logger.py
+COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
 CMD ["/run.sh"]
