@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if command -v bashio &> /dev/null; then
+if command -v bashio >/dev/null; then
   export MQTT_HOST=$(bashio::services mqtt "host")
   export MQTT_PORT=$(bashio::services mqtt "port")
   export MQTT_USER=$(bashio::services mqtt "username")
