@@ -1,8 +1,6 @@
-FROM python:3.11-slim
+FROM python:3.11-alpine
 
-RUN apt-get update \
- && apt-get install -y bash python3-paho-mqtt \
- && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache python3 py3-paho-mqtt bash
 
 RUN pip3 install --no-cache-dir pythonping
 
