@@ -1,24 +1,13 @@
-{
-  "name": "Ping Logger",
-  "version": "0.8.5",
-  "slug": "ping_logger",
-  "description": "Loguje ping i publikuje sensory do Home Assistant przez MQTT (Alpine+venv)",
-  "startup": "application",
-  "boot": "auto",
-  "host_network": true,
-  "arch": ["amd64","aarch64","armv7","armhf","i386"],
-  "options": {
-    "targets": ["8.8.8.8", "1.1.1.1"],
-    "interval": 60,
-    "keep_days": 2,
-    "size": 56
-  },
-  "schema": {
-    "targets": ["str"],
-    "interval": "int",
-    "keep_days": "int",
-    "size": "int"
-  },
-  "services": ["mqtt:need"],
-  "build": true
-}
+FROM ghcr.io/home-assistant/${BUILD_ARCH}-base:latest
+
+RUN apk add --no-cache python3 py3-pip python3-venv py3-paho-mqtt
+
+# Stwórz własne środowisko venv i doinstaluj pythonping
+RUN python3 -m venv /venv \
+    && /venv/bin/pip install --no-cache-dir pythonping
+
+COPY ping_logger.py /ping_logger.py
+COPY run.sh /run.sh
+RUN chmod +x /run.sh
+
+ENTRYPOINT ["/run.sh"]
