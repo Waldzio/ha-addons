@@ -1,13 +1,24 @@
-FROM ghcr.io/home-assistant/${BUILD_ARCH}-base:latest
-
-# Zainstaluj Python i MQTT (Alpine)
-RUN apk add --no-cache python3 py3-pip py3-paho-mqtt
-
-# Pozwól pipowi nadpisać systemowe pakiety
-RUN pip install --break-system-packages pythonping
-
-COPY ping_logger.py /ping_logger.py
-COPY run.sh /run.sh
-RUN chmod +x /run.sh
-
-CMD ["/run.sh"]
+{
+  "name": "Ping Logger",
+  "version": "0.8.5",
+  "slug": "ping_logger",
+  "description": "Loguje ping i publikuje sensory do Home Assistant przez MQTT (Alpine+venv)",
+  "startup": "application",
+  "boot": "auto",
+  "host_network": true,
+  "arch": ["amd64","aarch64","armv7","armhf","i386"],
+  "options": {
+    "targets": ["8.8.8.8", "1.1.1.1"],
+    "interval": 60,
+    "keep_days": 2,
+    "size": 56
+  },
+  "schema": {
+    "targets": ["str"],
+    "interval": "int",
+    "keep_days": "int",
+    "size": "int"
+  },
+  "services": ["mqtt:need"],
+  "build": true
+}
