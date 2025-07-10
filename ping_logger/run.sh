@@ -1,24 +1,10 @@
-{
-  "name": "Ping Logger",
-  "version": "0.8.5",
-  "slug": "ping_logger",
-  "description": "Loguje ping i publikuje sensory do Home Assistant przez MQTT (Alpine+venv)",
-  "startup": "application",
-  "boot": "auto",
-  "host_network": true,
-  "arch": ["amd64","aarch64","armv7","armhf","i386"],
-  "options": {
-    "targets": ["8.8.8.8", "1.1.1.1"],
-    "interval": 60,
-    "keep_days": 2,
-    "size": 56
-  },
-  "schema": {
-    "targets": ["str"],
-    "interval": "int",
-    "keep_days": "int",
-    "size": "int"
-  },
-  "services": ["mqtt:need"],
-  "build": true
-}
+#!/usr/bin/env bash
+
+if command -v bashio &> /dev/null; then
+  export MQTT_HOST=$(bashio::services mqtt "host")
+  export MQTT_PORT=$(bashio::services mqtt "port")
+  export MQTT_USER=$(bashio::services mqtt "username")
+  export MQTT_PASS=$(bashio::services mqtt "password")
+fi
+
+/venv/bin/python /ping_logger.py
