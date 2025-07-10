@@ -1,6 +1,6 @@
 {
   "name": "Ping Logger",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "slug": "ping_logger",
   "description": "Loguje ping i publikuje sensory do Home Assistant przez MQTT (Alpine+venv)",
   "startup": "application",
