@@ -1,6 +1,6 @@
 {
   "name": "Ping Logger",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "slug": "ping_logger",
   "description": "Loguje ping i publikuje sensory do Home Assistant przez MQTT (Debian-slim)",
   "startup": "application",
