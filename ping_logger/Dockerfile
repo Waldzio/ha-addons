@@ -1,13 +1,10 @@
-FROM ghcr.io/home-assistant/${BUILD_ARCH}-base:latest
+#!/usr/bin/env bash
 
-RUN apk add --no-cache python3 py3-pip python3-venv py3-paho-mqtt
+if command -v bashio &> /dev/null; then
+  export MQTT_HOST=$(bashio::services mqtt "host")
+  export MQTT_PORT=$(bashio::services mqtt "port")
+  export MQTT_USER=$(bashio::services mqtt "username")
+  export MQTT_PASS=$(bashio::services mqtt "password")
+fi
 
-# Stwórz własne środowisko venv i doinstaluj pythonping
-RUN python3 -m venv /venv \
-    && /venv/bin/pip install --no-cache-dir pythonping
-
-COPY ping_logger.py /ping_logger.py
-COPY run.sh /run.sh
-RUN chmod +x /run.sh
-
-ENTRYPOINT ["/run.sh"]
+/venv/bin/python /ping_logger.py
